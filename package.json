@@ -1,5 +1,5 @@
 {
-  "name": "event",
+  "name": "nc-event",
   "version": "0.0.1",
   "description": "nc-event",
   "main": "lib/index.js",
