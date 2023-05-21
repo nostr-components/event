@@ -1,6 +1,6 @@
 {
   "name": "event",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "nc-event",
   "main": "lib/index.js",
   "scripts": {
@@ -22,6 +22,5 @@
     "url": "https://github.com/nostr-components/event/issues"
   },
   "homepage": "https://github.com/nostr-components/event#readme",
-  "dependencies": {
-  }
+  "dependencies": {}
 }
