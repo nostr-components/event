@@ -1,6 +1,6 @@
 {
   "name": "nc-event",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "nc-event",
   "main": "lib/index.js",
   "scripts": {
