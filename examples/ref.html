@@ -87,7 +87,7 @@
           data.pubkey = data.attributedTo?.split('/users/')[1]
           let event = {
             '@context': 'https://w3id.org/nostr/context',
-            '@id': data.id,
+            '@id': 'nostr:event:' + data.id,
             '@type': 'Event',
             content: data.content,
             created_at: data.created_at,
