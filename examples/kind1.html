@@ -19,7 +19,7 @@
         border-radius: 8px;
         padding: 10px 15px;
         max-width: 500px;
-        margin: 0 auto;
+        margin: 20px auto;
       }
       .tweet-header {
         display: flex;
@@ -50,25 +50,6 @@
       }
       .tweet-footer a:hover {
         text-decoration: underline;
-      }
-      .profile-card {
-        margin-top: 15px;
-        padding: 10px;
-        border-radius: 8px;
-        background-color: #f5f5f5;
-        border: 1px solid #ddd;
-      }
-      .profile-card img {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
-      .profile-card .profile-name {
-        font-weight: bold;
-      }
-      .profile-card .profile-about {
-        margin-top: 5px;
       }
       .tweet-content img {
         max-width: 100%;
@@ -107,17 +88,17 @@
             parseInt(data.created_at) * 1000
           ).toLocaleString()
 
-          // Function to parse content and convert image URIs to img tags
           const parseContent = content => {
             return content.split(' ').map(word => {
-              if (word.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null) {
+              if (word.startsWith('nostr:npub')) {
+                return word.slice(0, 16) + '... '
+              } else if (word.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null) {
                 return html`<img src=${word} alt="Embedded Image" />`
               }
               return word + ' '
             })
           }
 
-          // Handle relative URLs for profile pictures
           const getProfilePicture = profile => {
             if (profile?.picture && !profile.picture.startsWith('http')) {
               return new URL(profile.picture, profile.website).toString()
@@ -151,9 +132,9 @@
         }
       }
 
-      function parseQueryString() {
+      function parseQueryString(param) {
         const params = new URLSearchParams(window.location.search)
-        return params.get('uri')
+        return params.get(param)
       }
 
       async function fetchJson(uri) {
@@ -171,33 +152,53 @@
 
       async function initializeApp() {
         let jsonData = document.getElementById('tweet-data').textContent
-        const uri = parseQueryString()
-        let profileData = null
+        const uri1 = parseQueryString('uri1')
+        const uri2 = parseQueryString('uri2')
+        let profileData1 = null
+        let profileData2 = null
 
-        var data = JSON.parse(jsonData)
+        let data1 = JSON.parse(jsonData)
+        let data2 = null
 
-        if (uri) {
-          const fetchedData = await fetchJson(uri)
-          if (fetchedData) {
-            jsonData = fetchedData
-            data = jsonData
-            console.log('jsonData', fetchedData)
+        if (uri1) {
+          const fetchedData1 = await fetchJson(uri1)
+          if (fetchedData1) {
+            data1 = fetchedData1
+            if (data1.pubkey) {
+              const fetchUri1 = uri1.replace(
+                /\/event\/[^\/]+\.json$/,
+                `/pubkey/${data1.pubkey}.json`
+              )
+              profileData1 = await fetchJson(fetchUri1)
+            }
           }
         }
 
-        if (data.pubkey) {
-          const fetchUri = uri.replace(
-            /\/event\/[^\/]+\.json$/,
-            `/pubkey/${jsonData.pubkey}.json`
-          )
-          console.log('fetchUri', fetchUri)
-          profileData = await fetchJson(fetchUri)
+        if (uri2) {
+          const fetchedData2 = await fetchJson(uri2)
+          if (fetchedData2) {
+            data2 = fetchedData2
+            if (data2.pubkey) {
+              const fetchUri2 = uri2.replace(
+                /\/event\/[^\/]+\.json$/,
+                `/pubkey/${data2.pubkey}.json`
+              )
+              profileData2 = await fetchJson(fetchUri2)
+            }
+          }
         }
 
-        render(
-          html`<${Tweet} data=${data} profile=${profileData} />`,
-          document.getElementById('app')
+        const components = []
+        components.push(
+          html`<${Tweet} data=${data1} profile=${profileData1} />`
         )
+        if (data2) {
+          components.push(
+            html`<${Tweet} data=${data2} profile=${profileData2} />`
+          )
+        }
+
+        render(html`${components}`, document.getElementById('app'))
       }
 
       initializeApp()
