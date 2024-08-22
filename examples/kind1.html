@@ -209,7 +209,11 @@
         }
 
         const components = []
-        components.push(html`<${Tweet} data=${data} profile=${profileData} />`)
+        if (data) {
+          components.push(
+            html`<${Tweet} data=${data} profile=${profileData} />`
+          )
+        }
         if (data1) {
           components.push(
             html`<${Tweet} data=${data1} profile=${profileData1} />`
