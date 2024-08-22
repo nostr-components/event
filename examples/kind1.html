@@ -117,13 +117,18 @@
             })
           }
 
+          // Handle relative URLs for profile pictures
+          const getProfilePicture = profile => {
+            if (profile?.picture && !profile.picture.startsWith('http')) {
+              return new URL(profile.picture, profile.website).toString()
+            }
+            return profile?.picture || 'https://via.placeholder.com/48'
+          }
+
           return html`
             <div class="tweet-container">
               <div class="tweet-header">
-                <img
-                  src=${profile?.picture || 'https://via.placeholder.com/48'}
-                  alt="User Avatar"
-                />
+                <img src=${getProfilePicture(profile)} alt="User Avatar" />
                 <div>
                   <div class="name">
                     ${profile?.name || data.pubkey.slice(0, 16)}
