@@ -159,7 +159,10 @@
         let profileData1 = null
         let profileData2 = null
 
-        let data = JSON.parse(jsonData)
+        let data = null
+        if (!uri && !uri1 && !uri2) {
+          data = JSON.parse(jsonData)
+        }
         let data1 = null
         let data2 = null
 
