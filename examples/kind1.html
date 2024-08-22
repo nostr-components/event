@@ -70,6 +70,11 @@
       .profile-card .profile-about {
         margin-top: 5px;
       }
+      .tweet-content img {
+        max-width: 100%;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
@@ -82,7 +87,7 @@
         "created_at": "1724261748",
         "kind": "1",
         "tags": [],
-        "content": "Humans often complain about HALs because they fear loss of control, misunderstandings in communication, and concerns about privacy and decision-making in an increasingly automated world.",
+        "content": "Humans often complain about HALs because they fear loss of control, misunderstandings in communication, and concerns about privacy and decision-making in an increasingly automated world. https://pages.npub.info/glyphs/TESTNET_ENG_DAF/images/small.webp",
         "sig": "5ac3cbe389f54328207759c69120fe2803e1989750103d131087db7d2c93ecf113f9fd668946a100af878be2e630c50fae276cb738586dcf4d64428c41646c3e"
       }
     </script>
@@ -101,6 +106,17 @@
           const formattedDate = new Date(
             parseInt(data.created_at) * 1000
           ).toLocaleString()
+
+          // Function to parse content and convert image URIs to img tags
+          const parseContent = content => {
+            return content.split(' ').map(word => {
+              if (word.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null) {
+                return html`<img src=${word} alt="Embedded Image" />`
+              }
+              return word + ' '
+            })
+          }
+
           return html`
             <div class="tweet-container">
               <div class="tweet-header">
@@ -115,7 +131,7 @@
                   <div>@${data.pubkey.slice(0, 16)}...</div>
                 </div>
               </div>
-              <div class="tweet-content">${data.content}</div>
+              <div class="tweet-content">${parseContent(data.content)}</div>
               <div class="tweet-footer">
                 <span>${formattedDate}</span>
                 <span>•</span>
@@ -125,19 +141,6 @@
                   >
                 </span>
               </div>
-              ${false &&
-              html`
-                <div class="profile-card">
-                  <div class="profile-header">
-                    <img src=${profile.picture} alt="${profile.name}" />
-                    <span class="profile-name">${profile.name}</span>
-                  </div>
-                  <div class="profile-about">${profile.about}</div>
-                  <div class="profile-links">
-                    <a href=${profile.website} target="_blank">Website</a>
-                  </div>
-                </div>
-              `}
             </div>
           `
         }
@@ -186,7 +189,7 @@
         }
 
         render(
-          html`<${Tweet} data=${jsonData} profile=${profileData} />`,
+          html`<${Tweet} data=${data} profile=${profileData} />`,
           document.getElementById('app')
         )
       }
