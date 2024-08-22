@@ -51,6 +51,25 @@
       .tweet-footer a:hover {
         text-decoration: underline;
       }
+      .profile-card {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+      }
+      .profile-card img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+      .profile-card .profile-name {
+        font-weight: bold;
+      }
+      .profile-card .profile-about {
+        margin-top: 5px;
+      }
     </style>
   </head>
   <body>
@@ -59,11 +78,11 @@
     <script type="application/json" id="tweet-data">
       {
         "id": "004f8f1ee199e1b6aa8532318a38b1892d21c856bae8956c08d631746fc35384",
-        "pubkey": "ef02ba52673dcd2c3d042c8a4ec216c77b8f115f84efb5f558b10da18abf5fdd",
+        "pubkey": "1832f40ebc7132d2dc18ff7f7eac2a5b0dbd661fa12d5de5fc220aab637f26fc",
         "created_at": "1724261748",
         "kind": "1",
         "tags": [],
-        "content": "auto-following on account creation is a mistake. especially for nostr clients. takes a bunch of agency away and puts the person in a defensive position of “why am i following this account?”.",
+        "content": "Humans often complain about HALs because they fear loss of control, misunderstandings in communication, and concerns about privacy and decision-making in an increasingly automated world.",
         "sig": "5ac3cbe389f54328207759c69120fe2803e1989750103d131087db7d2c93ecf113f9fd668946a100af878be2e630c50fae276cb738586dcf4d64428c41646c3e"
       }
     </script>
@@ -78,16 +97,21 @@
       const html = htm.bind(h)
 
       class Tweet extends Component {
-        render({ data }) {
+        render({ data, profile }) {
           const formattedDate = new Date(
             parseInt(data.created_at) * 1000
           ).toLocaleString()
           return html`
             <div class="tweet-container">
               <div class="tweet-header">
-                <img src="https://via.placeholder.com/48" alt="User Avatar" />
+                <img
+                  src=${profile?.picture || 'https://via.placeholder.com/48'}
+                  alt="User Avatar"
+                />
                 <div>
-                  <div class="name">${data.pubkey.slice(0, 16)}</div>
+                  <div class="name">
+                    ${profile?.name || data.pubkey.slice(0, 16)}
+                  </div>
                   <div>@${data.pubkey.slice(0, 16)}...</div>
                 </div>
               </div>
@@ -101,6 +125,19 @@
                   >
                 </span>
               </div>
+              ${false &&
+              html`
+                <div class="profile-card">
+                  <div class="profile-header">
+                    <img src=${profile.picture} alt="${profile.name}" />
+                    <span class="profile-name">${profile.name}</span>
+                  </div>
+                  <div class="profile-about">${profile.about}</div>
+                  <div class="profile-links">
+                    <a href=${profile.website} target="_blank">Website</a>
+                  </div>
+                </div>
+              `}
             </div>
           `
         }
@@ -111,7 +148,7 @@
         return params.get('uri')
       }
 
-      async function fetchTweetData(uri) {
+      async function fetchJson(uri) {
         try {
           const response = await fetch(uri)
           if (!response.ok) {
@@ -119,7 +156,7 @@
           }
           return await response.json()
         } catch (error) {
-          console.error('Failed to fetch tweet data:', error)
+          console.error('Failed to fetch data:', error)
           return null
         }
       }
@@ -127,16 +164,31 @@
       async function initializeApp() {
         let jsonData = document.getElementById('tweet-data').textContent
         const uri = parseQueryString()
+        let profileData = null
+
+        const data = JSON.parse(jsonData)
 
         if (uri) {
-          const fetchedData = await fetchTweetData(uri)
+          const fetchedData = await fetchJson(uri)
           if (fetchedData) {
-            jsonData = JSON.stringify(fetchedData)
+            jsonData = fetchedData
+            console.log('jsonData', fetchedData)
           }
         }
 
-        const data = JSON.parse(jsonData)
-        render(html`<${Tweet} data=${data} />`, document.getElementById('app'))
+        if (data.pubkey) {
+          const fetchUri = uri.replace(
+            /\/event\/[^\/]+\.json$/,
+            `/pubkey/${jsonData.pubkey}.json`
+          )
+          console.log('fetchUri', fetchUri)
+          profileData = await fetchJson(fetchUri)
+        }
+
+        render(
+          html`<${Tweet} data=${jsonData} profile=${profileData} />`,
+          document.getElementById('app')
+        )
       }
 
       initializeApp()
