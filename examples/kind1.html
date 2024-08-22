@@ -152,13 +152,30 @@
 
       async function initializeApp() {
         let jsonData = document.getElementById('tweet-data').textContent
+        const uri = parseQueryString('uri')
         const uri1 = parseQueryString('uri1')
         const uri2 = parseQueryString('uri2')
+        let profileData = null
         let profileData1 = null
         let profileData2 = null
 
-        let data1 = JSON.parse(jsonData)
+        let data = JSON.parse(jsonData)
+        let data1 = null
         let data2 = null
+
+        if (uri) {
+          const fetchedData = await fetchJson(uri)
+          if (fetchedData) {
+            data = fetchedData
+            if (data.pubkey) {
+              const fetchUri = uri.replace(
+                /\/event\/[^\/]+\.json$/,
+                `/pubkey/${data.pubkey}.json`
+              )
+              profileData = await fetchJson(fetchUri)
+            }
+          }
+        }
 
         if (uri1) {
           const fetchedData1 = await fetchJson(uri1)
@@ -189,9 +206,12 @@
         }
 
         const components = []
-        components.push(
-          html`<${Tweet} data=${data1} profile=${profileData1} />`
-        )
+        components.push(html`<${Tweet} data=${data} profile=${profileData} />`)
+        if (data1) {
+          components.push(
+            html`<${Tweet} data=${data1} profile=${profileData1} />`
+          )
+        }
         if (data2) {
           components.push(
             html`<${Tweet} data=${data2} profile=${profileData2} />`
