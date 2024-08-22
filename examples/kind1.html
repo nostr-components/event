@@ -169,12 +169,13 @@
         const uri = parseQueryString()
         let profileData = null
 
-        const data = JSON.parse(jsonData)
+        var data = JSON.parse(jsonData)
 
         if (uri) {
           const fetchedData = await fetchJson(uri)
           if (fetchedData) {
             jsonData = fetchedData
+            data = jsonData
             console.log('jsonData', fetchedData)
           }
         }
