@@ -122,7 +122,7 @@
                 <span>${formattedDate}</span>
                 <span>•</span>
                 <span>
-                  <a target="_blank" href=${parseQueryString()}
+                  <a target="_blank" href="./${data.id}.json"
                     >View Nostr Event</a
                   >
                 </span>
@@ -154,14 +154,23 @@
         let jsonData = document.getElementById('tweet-data').textContent
         let data = JSON.parse(jsonData)
 
-        const uris = []
-        const uri = parseQueryString(`uri`)
-        if (uri) uris.push(uri)
+        let uris = []
+        const eventlist = parseQueryString('eventlist')
 
-        // Collect all uris dynamically
-        for (var i = 0; i < 1000; i++) {
-          const uri = parseQueryString(`uri${i}`)
+        if (eventlist) {
+          const eventListData = await fetchJson(eventlist)
+          if (eventListData && Array.isArray(eventListData.uris)) {
+            uris = eventListData.uris
+          }
+        } else {
+          const uri = parseQueryString(`uri`)
           if (uri) uris.push(uri)
+
+          // Collect all uris dynamically
+          for (let i = 0; i < 1000; i++) {
+            const uri = parseQueryString(`uri${i}`)
+            if (uri) uris.push(uri)
+          }
         }
 
         const components = []
