@@ -159,8 +159,9 @@
 
         if (eventlist) {
           const eventListData = await fetchJson(eventlist)
-          if (eventListData && Array.isArray(eventListData.uris)) {
-            uris = eventListData.uris
+          if (eventListData && Array.isArray(eventListData)) {
+            uris = eventListData
+            console.log('eventlist', uris)
           }
         } else {
           const uri = parseQueryString(`uri`)
