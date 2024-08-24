@@ -112,9 +112,14 @@
                 <img src=${getProfilePicture(profile)} alt="User Avatar" />
                 <div>
                   <div class="name">
-                    ${profile?.name || data.pubkey.slice(0, 16)}
+                    <a
+                      href="${profile.website}"
+                      target="_blank"
+                      style="color: #1DA1F2; text-decoration: none; font-weight: bold;"
+                      >${profile?.name || data.pubkey.slice(0, 16)}</a
+                    >
                   </div>
-                  <div>@${data.pubkey.slice(0, 16)}...</div>
+                  <div class="tweet-footer">@${data.pubkey.slice(0, 8)}...</div>
                 </div>
               </div>
               <div class="tweet-content">${parseContent(data.content)}</div>
