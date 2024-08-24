@@ -124,7 +124,15 @@
               </div>
               <div class="tweet-content">${parseContent(data.content)}</div>
               <div class="tweet-footer">
-                <span>${formattedDate}</span>
+                <span
+                  ><a
+                    target="_blank"
+                    href="${document.location.href
+                      .replace('event', 'eventlist')
+                      .replace('uri=', 'eventlist=')}"
+                    >${formattedDate}</a
+                  ></span
+                >
                 <span>•</span>
                 <span>
                   <a
