@@ -113,7 +113,7 @@
                 <div>
                   <div class="name">
                     <a
-                      href="${profile.website}"
+                      href="${profile?.website}"
                       target="_blank"
                       style="color: #1DA1F2; text-decoration: none; font-weight: bold;"
                       >${profile?.name || data.pubkey.slice(0, 16)}</a
@@ -137,7 +137,7 @@
                 <span>
                   <a
                     target="_blank"
-                    href="${profile.website}.nostr/event/${data.id}.json"
+                    href="${profile?.website}.nostr/event/${data.id}.json"
                     >View Nostr Event</a
                   >
                 </span>
