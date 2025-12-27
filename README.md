@@ -180,7 +180,7 @@ Import from `nc-event/lib/media.js`:
 
 ### Supported Formats
 
-Based on [NIP-XX Content Rendering Guidelines](https://github.com/nostr-protocol/nips).
+Based on [NIP-MEDIA Content Rendering Guidelines](./NIP-MEDIA.md).
 
 **Images:**
 ```
