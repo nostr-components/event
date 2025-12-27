@@ -3,63 +3,340 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Media Display Examples</title>
+    <title>nc-event - Nostr Event Component with Smart Media Detection</title>
+    <meta name="description" content="Lightweight component for rendering Nostr events with automatic media detection. Zero dependencies, ~3KB gzipped.">
     <style>
-      body {
-        background-color: #f4f4f4;
-        font-family: Arial, sans-serif;
-        padding: 20px;
-      }
-      h1 {
-        color: #333;
-      }
-      .example-list {
-        list-style-type: none;
+      * {
+        box-sizing: border-box;
+        margin: 0;
         padding: 0;
       }
-      .example-list li {
-        margin: 10px 0;
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
       }
-      .example-list a {
-        color: #007bff;
+      .hero {
+        text-align: center;
+        padding: 60px 20px 40px;
+        color: white;
+      }
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      .hero .tagline {
+        font-size: 1.4rem;
+        opacity: 0.95;
+        margin-bottom: 20px;
+      }
+      .badges {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+      }
+      .badges img {
+        height: 22px;
+      }
+      .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 28px;
+        border-radius: 8px;
         text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
       }
-      .example-list a:hover {
-        color: #0056b3;
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      }
+      .btn-primary {
+        background: white;
+        color: #764ba2;
+      }
+      .btn-secondary {
+        background: rgba(255,255,255,0.15);
+        color: white;
+        border: 2px solid white;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .demo-section {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        margin: -20px 20px 40px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      }
+      .demo-section h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .demo-box {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e9ecef;
+      }
+      #demo-container {
+        min-height: 100px;
+      }
+      #demo-container a {
+        color: #667eea;
+        word-break: break-all;
+      }
+      #demo-container img {
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+      #demo-container hr {
+        border: none;
+        border-top: 1px solid #dee2e6;
+        margin: 15px 0;
+      }
+      #demo-container details {
+        margin-top: 10px;
+      }
+      #demo-container summary {
+        cursor: pointer;
+        color: #666;
+        font-size: 0.9rem;
+      }
+      #demo-container pre {
+        background: #f1f3f4;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-size: 0.8rem;
+        margin-top: 10px;
+      }
+      .features {
+        background: #f8f9fa;
+        padding: 60px 20px;
+      }
+      .features h2 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 2rem;
+      }
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .feature-card {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      .feature-card h3 {
+        margin-bottom: 10px;
+        color: #667eea;
+      }
+      .feature-card p {
+        color: #666;
+        font-size: 0.95rem;
+      }
+      .quick-start {
+        padding: 60px 20px;
+        background: white;
+      }
+      .quick-start h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2rem;
+      }
+      .code-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: 'Fira Code', 'Consolas', monospace;
+        font-size: 0.9rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .code-block .comment { color: #6a9955; }
+      .code-block .keyword { color: #569cd6; }
+      .code-block .string { color: #ce9178; }
+      .examples-section {
+        padding: 60px 20px;
+        background: #f8f9fa;
+      }
+      .examples-section h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2rem;
+      }
+      .example-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .example-link {
+        display: block;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #333;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .example-link:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      }
+      .example-link .icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+      footer {
+        text-align: center;
+        padding: 40px 20px;
+        background: #333;
+        color: #aaa;
+      }
+      footer a {
+        color: #fff;
       }
     </style>
   </head>
 
   <body>
-    <h1>Media Display Examples</h1>
-    <ul class="example-list">
-      <li>
-        <a href="./examples/pic.html" target="_blank"
-          >Single Picture Display (pic.html)</a
-        >
-      </li>
-      <li>
-        <a href="./examples/pics.html" target="_blank"
-          >Multiple Pictures Display (pics.html)</a
-        >
-      </li>
-      <li>
-        <a href="./examples/video.html" target="_blank"
-          >Video Display (video.html)</a
-        >
-      </li>
-      <li>
-        <a href="./examples/youtube.html" target="_blank"
-          >YouTube Video Display (youtube.html)</a
-        >
-      </li>
-      <li>
-        <a
-          href="./examples/ref.html?event=2203f53e5833ea30b31c61c1a4fa67c66ce6a3771c5e8eda958cb3300c5acb86"
-          target="_blank"
-          >Query String (?event=)</a
-        >
-      </li>
-    </ul>
+    <div class="hero">
+      <h1>nc-event</h1>
+      <p class="tagline">Render Nostr events with automatic media detection</p>
+      <div class="badges">
+        <img src="https://img.shields.io/npm/v/nc-event?color=blue" alt="npm version">
+        <img src="https://img.shields.io/badge/dependencies-0-brightgreen" alt="Zero dependencies">
+        <img src="https://img.shields.io/badge/gzip-~3KB-blue" alt="Bundle size">
+        <img src="https://img.shields.io/badge/tests-88%20passing-brightgreen" alt="Tests">
+      </div>
+      <div class="cta-buttons">
+        <a href="https://github.com/nostr-components/event" class="btn btn-primary">GitHub</a>
+        <a href="https://www.npmjs.com/package/nc-event" class="btn btn-secondary">npm</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="demo-section">
+        <h2>Live Demo</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">
+          URLs in Nostr events automatically become embedded media
+        </p>
+        <div class="demo-box">
+          <div id="demo-container">Loading demo...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <h2>Why nc-event?</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Zero Dependencies</h3>
+          <p>Uses bundled Preact (~3KB). Nothing to install, no node_modules bloat.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Smart Detection</h3>
+          <p>Recognizes 30+ file formats plus YouTube, Spotify, Vimeo, and more.</p>
+        </div>
+        <div class="feature-card">
+          <h3>No Build Step</h3>
+          <p>Pure ES modules. Works directly in browsers, CDN-ready.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Fully Tested</h3>
+          <p>88 unit tests covering edge cases, based on NIP-XX guidelines.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-start">
+      <h2>Quick Start</h2>
+      <div class="code-block">
+<span class="keyword">import</span> { html, render } <span class="keyword">from</span> <span class="string">'https://unpkg.com/nc-event/js/standalone.module.js'</span>
+<span class="keyword">import</span> Event <span class="keyword">from</span> <span class="string">'https://unpkg.com/nc-event/lib/index.js'</span>
+
+<span class="keyword">const</span> event = {
+  pubkey: <span class="string">"npub1..."</span>,
+  content: <span class="string">"Check this out! https://example.com/photo.png"</span>,
+  kind: <span class="string">1</span>
+}
+
+render(html<span class="string">`&lt;$</span>{Event} event=${event} />`</span>, document.body)
+      </div>
+    </div>
+
+    <div class="examples-section">
+      <h2>Examples</h2>
+      <div class="example-grid">
+        <a href="./examples/pic.html" class="example-link">
+          <div class="icon">&#128247;</div>
+          <div>Single Image</div>
+        </a>
+        <a href="./examples/pics.html" class="example-link">
+          <div class="icon">&#127748;</div>
+          <div>Image Gallery</div>
+        </a>
+        <a href="./examples/video.html" class="example-link">
+          <div class="icon">&#127909;</div>
+          <div>Video</div>
+        </a>
+        <a href="./examples/youtube.html" class="example-link">
+          <div class="icon">&#9654;&#65039;</div>
+          <div>YouTube</div>
+        </a>
+      </div>
+    </div>
+
+    <footer>
+      <p>
+        MIT License &middot;
+        <a href="https://github.com/nostr-components/event">GitHub</a> &middot;
+        <a href="https://www.npmjs.com/package/nc-event">npm</a> &middot;
+        Built for <a href="https://nostr.com">Nostr</a>
+      </p>
+    </footer>
+
+    <script type="module">
+      import { html, render } from './js/standalone.module.js'
+      import Event from './lib/index.js'
+
+      const demoEvent = {
+        id: "demo123",
+        pubkey: "82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2",
+        content: "Hello Nostr! Check out this image from the decentralized web https://image.nostr.build/f4d986de0c699e9191c2b1bb8ea0d46f01e67df08bd0be37d47d730cd499134d.jpg",
+        kind: 1,
+        created_at: Math.floor(Date.now() / 1000),
+        tags: []
+      }
+
+      render(html`<${Event} event=${demoEvent} />`, document.getElementById('demo-container'))
+    </script>
   </body>
 </html>
