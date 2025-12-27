@@ -57,6 +57,8 @@
         font-weight: 600;
         font-size: 1rem;
         transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        border: none;
       }
       .btn:hover {
         transform: translateY(-2px);
@@ -76,49 +78,152 @@
         margin: 0 auto;
         padding: 0 20px;
       }
-      .demo-section {
+
+      /* Playground Section */
+      .playground-section {
         background: white;
         border-radius: 16px;
         padding: 30px;
         margin: -20px 20px 40px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.15);
       }
-      .demo-section h2 {
+      .playground-section h2 {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         color: #333;
       }
-      .demo-box {
+      .playground-section .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 25px;
+      }
+      .input-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+      .input-row input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+      }
+      .input-row input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      .input-row button {
+        padding: 12px 24px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .input-row button:hover {
+        background: #5a6fd6;
+      }
+      .preset-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 10px;
+      }
+      .preset-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .preset-btn {
+        padding: 8px 16px;
+        background: #f0f0f0;
+        border: none;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .preset-btn:hover {
+        background: #667eea;
+        color: white;
+      }
+      .preset-btn.active {
+        background: #667eea;
+        color: white;
+      }
+      .result-area {
         background: #f8f9fa;
         border-radius: 8px;
         padding: 20px;
         border: 1px solid #e9ecef;
+        min-height: 120px;
       }
-      #demo-container {
-        min-height: 100px;
+      .detection-info {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e0e0e0;
+        flex-wrap: wrap;
       }
-      #demo-container a {
+      .detection-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: #e8f4fd;
+        color: #1976d2;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+      .detection-badge.image { background: #e8f5e9; color: #388e3c; }
+      .detection-badge.video { background: #fff3e0; color: #f57c00; }
+      .detection-badge.audio { background: #fce4ec; color: #c2185b; }
+      .detection-badge.youtube { background: #ffebee; color: #d32f2f; }
+      .detection-badge.none { background: #f5f5f5; color: #757575; }
+      #render-output {
+        min-height: 80px;
+      }
+      #render-output a {
         color: #667eea;
         word-break: break-all;
       }
-      #demo-container img {
+      #render-output img {
         border-radius: 8px;
         margin-top: 10px;
+        max-width: 100%;
       }
-      #demo-container hr {
+      #render-output video, #render-output audio {
+        max-width: 100%;
+        margin-top: 10px;
+      }
+      #render-output iframe {
+        margin-top: 10px;
+        max-width: 100%;
+      }
+      #render-output hr {
         border: none;
         border-top: 1px solid #dee2e6;
         margin: 15px 0;
       }
-      #demo-container details {
+      #render-output details {
         margin-top: 10px;
       }
-      #demo-container summary {
+      #render-output summary {
         cursor: pointer;
         color: #666;
         font-size: 0.9rem;
       }
-      #demo-container pre {
+      #render-output pre {
         background: #f1f3f4;
         padding: 10px;
         border-radius: 4px;
@@ -126,6 +231,17 @@
         font-size: 0.8rem;
         margin-top: 10px;
       }
+      .empty-state {
+        text-align: center;
+        color: #999;
+        padding: 30px;
+      }
+      .empty-state .icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+      }
+
+      /* Features */
       .features {
         background: #f8f9fa;
         padding: 60px 20px;
@@ -156,6 +272,8 @@
         color: #666;
         font-size: 0.95rem;
       }
+
+      /* Quick Start */
       .quick-start {
         padding: 60px 20px;
         background: white;
@@ -176,9 +294,10 @@
         max-width: 800px;
         margin: 0 auto;
       }
-      .code-block .comment { color: #6a9955; }
       .code-block .keyword { color: #569cd6; }
       .code-block .string { color: #ce9178; }
+
+      /* Examples */
       .examples-section {
         padding: 60px 20px;
         background: #f8f9fa;
@@ -214,6 +333,7 @@
         font-size: 2rem;
         margin-bottom: 10px;
       }
+
       footer {
         text-align: center;
         padding: 40px 20px;
@@ -243,13 +363,45 @@
     </div>
 
     <div class="container">
-      <div class="demo-section">
-        <h2>Live Demo</h2>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">
-          URLs in Nostr events automatically become embedded media
-        </p>
-        <div class="demo-box">
-          <div id="demo-container">Loading demo...</div>
+      <div class="playground-section">
+        <h2>Playground</h2>
+        <p class="subtitle">Paste a URL or try an example to see media detection in action</p>
+
+        <div class="input-row">
+          <input type="text" id="url-input" placeholder="Paste any media URL (image, video, YouTube, audio...)">
+          <button onclick="handleRender()">Render</button>
+        </div>
+
+        <div class="preset-label">Try these examples:</div>
+        <div class="preset-buttons">
+          <button class="preset-btn" onclick="loadPreset('image')">
+            <span>&#128247;</span> Image
+          </button>
+          <button class="preset-btn" onclick="loadPreset('gif')">
+            <span>&#127912;</span> GIF
+          </button>
+          <button class="preset-btn" onclick="loadPreset('video')">
+            <span>&#127909;</span> Video
+          </button>
+          <button class="preset-btn" onclick="loadPreset('youtube')">
+            <span>&#9654;&#65039;</span> YouTube
+          </button>
+          <button class="preset-btn" onclick="loadPreset('audio')">
+            <span>&#127925;</span> Audio
+          </button>
+          <button class="preset-btn" onclick="loadPreset('multi')">
+            <span>&#128293;</span> Multiple
+          </button>
+        </div>
+
+        <div class="result-area">
+          <div id="detection-display"></div>
+          <div id="render-output">
+            <div class="empty-state">
+              <div class="icon">&#128269;</div>
+              <div>Enter a URL above or click an example</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -293,7 +445,7 @@ render(html<span class="string">`&lt;$</span>{Event} event=${event} />`</span>, 
     </div>
 
     <div class="examples-section">
-      <h2>Examples</h2>
+      <h2>More Examples</h2>
       <div class="example-grid">
         <a href="./examples/pic.html" class="example-link">
           <div class="icon">&#128247;</div>
@@ -326,17 +478,86 @@ render(html<span class="string">`&lt;$</span>{Event} event=${event} />`</span>, 
     <script type="module">
       import { html, render } from './js/standalone.module.js'
       import Event from './lib/index.js'
+      import { parseMedia, detectMediaType, detectPlatform } from './lib/media.js'
 
-      const demoEvent = {
-        id: "demo123",
-        pubkey: "82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2",
-        content: "Hello Nostr! Check out this image from the decentralized web https://image.nostr.build/f4d986de0c699e9191c2b1bb8ea0d46f01e67df08bd0be37d47d730cd499134d.jpg",
-        kind: 1,
-        created_at: Math.floor(Date.now() / 1000),
-        tags: []
+      // Preset examples with reliable URLs
+      const presets = {
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/280px-PNG_transparency_demonstration_1.png',
+        gif: 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif',
+        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        youtube: 'https://youtu.be/dQw4w9WgXcQ',
+        audio: 'https://www.w3schools.com/html/horse.mp3',
+        multi: 'Check out this image https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/280px-PNG_transparency_demonstration_1.png and this video https://youtu.be/jNQXAC9IVRw'
       }
 
-      render(html`<${Event} event=${demoEvent} />`, document.getElementById('demo-container'))
+      // Make functions globally accessible
+      window.loadPreset = function(type) {
+        const input = document.getElementById('url-input')
+        input.value = presets[type]
+
+        // Update active button
+        document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'))
+        event.target?.classList.add('active')
+
+        handleRender()
+      }
+
+      window.handleRender = function() {
+        const input = document.getElementById('url-input')
+        const content = input.value.trim()
+
+        if (!content) {
+          document.getElementById('render-output').innerHTML = `
+            <div class="empty-state">
+              <div class="icon">&#128269;</div>
+              <div>Enter a URL above or click an example</div>
+            </div>
+          `
+          document.getElementById('detection-display').innerHTML = ''
+          return
+        }
+
+        // Detect media
+        const mediaItems = parseMedia(content)
+
+        // Show detection info
+        const detectionHtml = mediaItems.length > 0
+          ? `<div class="detection-info">
+              <span style="color: #666; font-size: 0.9rem;">Detected:</span>
+              ${mediaItems.map(m => {
+                const badgeClass = m.platform || m.type
+                const label = m.platform
+                  ? `${m.platform} (${m.type})`
+                  : m.type
+                return `<span class="detection-badge ${badgeClass}">${label}</span>`
+              }).join('')}
+            </div>`
+          : `<div class="detection-info">
+              <span class="detection-badge none">No media detected</span>
+            </div>`
+
+        document.getElementById('detection-display').innerHTML = detectionHtml
+
+        // Create event and render
+        const demoEvent = {
+          id: "playground-" + Date.now(),
+          pubkey: "82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2",
+          content: content,
+          kind: 1,
+          created_at: Math.floor(Date.now() / 1000),
+          tags: []
+        }
+
+        render(html`<${Event} event=${demoEvent} />`, document.getElementById('render-output'))
+      }
+
+      // Handle Enter key
+      document.getElementById('url-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleRender()
+      })
+
+      // Load image example by default
+      window.loadPreset('image')
     </script>
   </body>
 </html>
