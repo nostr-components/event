@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>nc-event - Nostr Event Component with Smart Media Detection</title>
     <meta name="description" content="Lightweight component for rendering Nostr events with automatic media detection. Zero dependencies, ~3KB gzipped.">
+    <link rel="icon" href="data:,">
     <style>
       * {
         box-sizing: border-box;
@@ -374,22 +375,22 @@
 
         <div class="preset-label">Try these examples:</div>
         <div class="preset-buttons">
-          <button class="preset-btn" onclick="loadPreset('image')">
+          <button class="preset-btn" data-preset="image">
             <span>&#128247;</span> Image
           </button>
-          <button class="preset-btn" onclick="loadPreset('gif')">
+          <button class="preset-btn" data-preset="gif">
             <span>&#127912;</span> GIF
           </button>
-          <button class="preset-btn" onclick="loadPreset('video')">
+          <button class="preset-btn" data-preset="video">
             <span>&#127909;</span> Video
           </button>
-          <button class="preset-btn" onclick="loadPreset('youtube')">
+          <button class="preset-btn" data-preset="youtube">
             <span>&#9654;&#65039;</span> YouTube
           </button>
-          <button class="preset-btn" onclick="loadPreset('audio')">
+          <button class="preset-btn" data-preset="audio">
             <span>&#127925;</span> Audio
           </button>
-          <button class="preset-btn" onclick="loadPreset('multi')">
+          <button class="preset-btn" data-preset="multi">
             <span>&#128293;</span> Multiple
           </button>
         </div>
@@ -477,7 +478,7 @@ render(html<span class="string">`&lt;$</span>{Event} event=${event} />`</span>, 
 
     <script type="module">
       import { html, render } from './js/standalone.module.js'
-      import Event from './lib/index.js'
+      import EventComponent from './lib/index.js'
       import { parseMedia, detectMediaType, detectPlatform } from './lib/media.js'
 
       // Preset examples with reliable URLs
@@ -490,19 +491,21 @@ render(html<span class="string">`&lt;$</span>{Event} event=${event} />`</span>, 
         multi: 'Check out this image https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/280px-PNG_transparency_demonstration_1.png and this video https://youtu.be/jNQXAC9IVRw'
       }
 
-      // Make functions globally accessible
-      window.loadPreset = function(type) {
+      function setActivePreset(presetType) {
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.preset === presetType)
+        })
+      }
+
+      function loadPreset(type) {
         const input = document.getElementById('url-input')
+        if (!presets[type]) return
         input.value = presets[type]
-
-        // Update active button
-        document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'))
-        event.target?.classList.add('active')
-
+        setActivePreset(type)
         handleRender()
       }
 
-      window.handleRender = function() {
+      function handleRender() {
         const input = document.getElementById('url-input')
         const content = input.value.trim()
 
@@ -539,7 +542,7 @@ render(html<span class="string">`&lt;$</span>{Event} event=${event} />`</span>, 
         document.getElementById('detection-display').innerHTML = detectionHtml
 
         // Create event and render
-        const demoEvent = {
+        const nostrEvent = {
           id: "playground-" + Date.now(),
           pubkey: "82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2",
           content: content,
@@ -548,16 +551,27 @@ render(html<span class="string">`&lt;$</span>{Event} event=${event} />`</span>, 
           tags: []
         }
 
-        render(html`<${Event} event=${demoEvent} />`, document.getElementById('render-output'))
+        render(html`<${EventComponent} event=${nostrEvent} />`, document.getElementById('render-output'))
       }
+
+      // Event delegation for preset buttons
+      document.querySelector('.preset-buttons').addEventListener('click', (e) => {
+        const btn = e.target.closest('.preset-btn')
+        if (btn && btn.dataset.preset) {
+          loadPreset(btn.dataset.preset)
+        }
+      })
 
       // Handle Enter key
       document.getElementById('url-input').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleRender()
       })
 
+      // Expose handleRender for the Render button
+      window.handleRender = handleRender
+
       // Load image example by default
-      window.loadPreset('image')
+      loadPreset('image')
     </script>
   </body>
 </html>
