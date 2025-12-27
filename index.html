@@ -189,6 +189,7 @@
       .detection-badge.image { background: #e8f5e9; color: #388e3c; }
       .detection-badge.video { background: #fff3e0; color: #f57c00; }
       .detection-badge.audio { background: #fce4ec; color: #c2185b; }
+      .detection-badge.playlist { background: #e3f2fd; color: #1565c0; }
       .detection-badge.youtube { background: #ffebee; color: #d32f2f; }
       .detection-badge.none { background: #f5f5f5; color: #757575; }
       #render-output {
@@ -390,6 +391,9 @@
           <button class="preset-btn" data-preset="audio">
             <span>&#127925;</span> Audio
           </button>
+          <button class="preset-btn" data-preset="playlist">
+            <span>&#127926;</span> Playlist
+          </button>
           <button class="preset-btn" data-preset="multi">
             <span>&#128293;</span> Multiple
           </button>
@@ -488,6 +492,7 @@ render(html<span class="string">`&lt;$</span>{Event} event=${event} />`</span>, 
         video: 'https://www.w3schools.com/html/mov_bbb.mp4',
         youtube: 'https://youtu.be/dQw4w9WgXcQ',
         audio: 'https://www.w3schools.com/html/horse.mp3',
+        playlist: 'https://nostr-components.github.io/event/examples/sample.m3u',
         multi: 'Check out this image https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/280px-PNG_transparency_demonstration_1.png and this video https://youtu.be/jNQXAC9IVRw'
       }
 

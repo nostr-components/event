@@ -1,0 +1,7 @@
+#EXTM3U
+#EXTINF:3,Big Buck Bunny Sample
+https://www.w3schools.com/html/mov_bbb.mp4
+#EXTINF:1,Horse Sound
+https://www.w3schools.com/html/horse.mp3
+#EXTINF:-1,Wikipedia Earth GIF
+https://upload.wikimedia.org/wikipedia/commons/2/2c/Rotating_earth_%28large%29.gif
