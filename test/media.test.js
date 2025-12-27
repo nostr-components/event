@@ -111,7 +111,9 @@ describe('detectMediaType', () => {
       ['https://example.com/video.m4v', 'M4V'],
       ['https://example.com/video.ogv', 'OGV'],
       ['https://example.com/old.wmv', 'WMV'],
-      ['https://example.com/old.flv', 'FLV']
+      ['https://example.com/old.flv', 'FLV'],
+      ['https://example.com/playlist.m3u', 'M3U playlist'],
+      ['https://example.com/stream.m3u8', 'HLS playlist']
     ]
 
     for (const [url, description] of videoTests) {

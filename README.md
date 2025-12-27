@@ -189,7 +189,7 @@ png, jpg, jpeg, gif, webp, avif, heic, svg, jxl, bmp, ico, tiff, tif
 
 **Video:**
 ```
-mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv
+mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv, m3u, m3u8
 ```
 
 **Audio:**

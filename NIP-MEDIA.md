@@ -45,7 +45,7 @@ png, jpg, jpeg, gif, webp, avif, heic, svg, jxl, bmp, ico, tiff, tif
 #### Video
 
 ```
-mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv
+mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv, m3u, m3u8
 ```
 
 #### Audio
@@ -81,7 +81,7 @@ https?:\/\/[^\s<>\[\]"']+\.(?:png|jpe?g|gif|webp|avif|heic|svg|jxl|bmp|ico|tiff?
 
 **Video:**
 ```regex
-https?:\/\/[^\s<>\[\]"']+\.(?:mp4|webm|mov|mkv|avi|m4v|3gp|ogv)(?:[?#].*)?(?=\s|$)
+https?:\/\/[^\s<>\[\]"']+\.(?:mp4|webm|mov|mkv|avi|m4v|3gp|ogv|wmv|flv|m3u8?)(?:[?#].*)?(?=\s|$)
 ```
 
 **Audio:**
@@ -254,7 +254,8 @@ Clients processing many events SHOULD:
 | webm | ✅ | ❌ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |
 | avi | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | mkv | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| m3u8 | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
+| m3u | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| m3u8 | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
 | wmv | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
 | flv | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Audio** |
