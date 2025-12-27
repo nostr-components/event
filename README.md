@@ -48,50 +48,48 @@ https://example.com/song.mp3   →  🎵 Audio player
 
 ## Quick Start
 
-### Option 1: Script Tag (Easiest)
+### Option 1: HTML Custom Element (Easiest)
+
+Just include the script and use `<nc-event>` directly:
 
 ```html
-<!DOCTYPE html>
-<html>
-<head>
-  <script type="module">
-    import { html, render } from 'https://unpkg.com/nc-event/js/standalone.module.js'
-    import Event from 'https://unpkg.com/nc-event/lib/index.js'
+<script type="module" src="https://unpkg.com/nc-event/lib/nc-event.js"></script>
 
-    const event = {
-      pubkey: "npub1...",
-      content: "Check out this photo! https://nostr.build/i/abc123.webp",
-      created_at: 1699900000,
-      kind: 1
-    }
-
-    render(html`<${Event} event=${event} />`, document.body)
-  </script>
-</head>
-<body></body>
-</html>
+<nc-event content="Check this out! https://nostr.build/i/abc123.webp"></nc-event>
 ```
 
-### Option 2: NPM
+With all attributes:
+
+```html
+<nc-event
+  content="Hello Nostr! https://example.com/photo.png"
+  pubkey="82341f882b6eabcd2ba7f1ef90aad961cf074af15b9ef44a09f9d2a8fbfbe6a2"
+  kind="1"
+></nc-event>
+```
+
+### Option 2: NPM + JavaScript
 
 ```bash
 npm install nc-event
 ```
 
 ```javascript
+import 'nc-event/lib/nc-event.js'
+
+// Now <nc-event> works in your HTML
+```
+
+Or use the Preact component directly:
+
+```javascript
 import { html, render } from 'nc-event/js/standalone.module.js'
 import Event from 'nc-event'
 
-const event = {
-  pubkey: "82341f882...",
-  content: "Hello Nostr! https://example.com/image.png",
-  kind: 1
-}
-
-render(html`<${Event} event=${event} />`, document.getElementById('app'))
+render(html`<${Event} event=${{ content: "Hello!", kind: 1 }} />`, document.body)
 ```
 
-### Option 3: Using the Media Module Standalone
+### Option 3: Media Detection Only
 
 The media detection module works independently — use it in any project:
 
@@ -132,22 +130,34 @@ Try these in your browser:
 
 ## API
 
-### `<Event>` Component
+### `<nc-event>` Custom Element
 
-Renders a Nostr event with automatic media embedding.
+The easiest way to use nc-event. Just add attributes:
 
-```javascript
-html`<${Event} event=${nostrEvent} />`
+```html
+<nc-event content="Hello! https://example.com/photo.png" pubkey="82341f..." kind="1"></nc-event>
 ```
 
-**Props:**
+**Attributes:**
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `event` | `Object` | Nostr event object (kind 1) |
-| `event.pubkey` | `string` | Author's public key |
-| `event.content` | `string` | Event content with URLs |
-| `event.kind` | `number` | Event kind (typically 1 for text notes) |
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `content` | `string` | Event content with URLs to detect |
+| `pubkey` | `string` | Author's public key (optional) |
+| `kind` | `number` | Event kind, default `1` |
+| `id` | `string` | Event ID (optional) |
+| `created-at` | `number` | Unix timestamp (optional) |
+
+### `<Event>` Preact Component
+
+For more control, use the Preact component directly:
+
+```javascript
+import { html, render } from 'nc-event/js/standalone.module.js'
+import Event from 'nc-event'
+
+render(html`<${Event} event=${{ content: "...", kind: 1 }} />`, document.body)
+```
 
 ### Media Detection Functions
 
@@ -230,7 +240,8 @@ Runs 88 unit tests covering:
 ```
 nc-event/
 ├── lib/
-│   ├── index.js      # Event component
+│   ├── nc-event.js   # <nc-event> custom element (use this!)
+│   ├── index.js      # Event Preact component
 │   └── media.js      # Media detection module (standalone)
 ├── test/
 │   └── media.test.js # Unit tests
