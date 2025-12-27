@@ -189,12 +189,17 @@ png, jpg, jpeg, gif, webp, avif, heic, svg, jxl, bmp, ico, tiff, tif
 
 **Video:**
 ```
-mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv, m3u, m3u8
+mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv, m3u8
 ```
 
 **Audio:**
 ```
 mp3, wav, flac, ogg, opus, aac, m4a, wma, aiff, ape
+```
+
+**Playlist:**
+```
+m3u
 ```
 
 ### Platform Embeds

@@ -45,7 +45,7 @@ png, jpg, jpeg, gif, webp, avif, heic, svg, jxl, bmp, ico, tiff, tif
 #### Video
 
 ```
-mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv, m3u, m3u8
+mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv, m3u8
 ```
 
 #### Audio
@@ -53,6 +53,14 @@ mp4, webm, mov, mkv, avi, m4v, 3gp, ogv, wmv, flv, m3u, m3u8
 ```
 mp3, wav, flac, ogg, opus, aac, m4a, wma, aiff, ape
 ```
+
+#### Playlist
+
+```
+m3u
+```
+
+Note: `m3u` (MP3 URL) is a playlist format that can reference audio or video files. `m3u8` is UTF-8 encoded m3u used specifically for HLS video streaming and is classified as video.
 
 ### Reference Regex Patterns
 
@@ -254,7 +262,6 @@ Clients processing many events SHOULD:
 | webm | ✅ | ❌ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |
 | avi | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | mkv | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| m3u | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | m3u8 | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
 | wmv | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
 | flv | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
@@ -262,6 +269,8 @@ Clients processing many events SHOULD:
 | mp3 | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ⚠️* | ✅ | ❌ |
 | wav | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
 | flac | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Playlist** |
+| m3u | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Method** |
 | Uses URL API | ❌ | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
 | CDN patterns | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |

@@ -18,6 +18,7 @@ import {
   isImage,
   isVideo,
   isAudio,
+  isPlaylist,
   EXTENSIONS
 } from '../lib/media.js'
 
@@ -112,8 +113,7 @@ describe('detectMediaType', () => {
       ['https://example.com/video.ogv', 'OGV'],
       ['https://example.com/old.wmv', 'WMV'],
       ['https://example.com/old.flv', 'FLV'],
-      ['https://example.com/playlist.m3u', 'M3U playlist'],
-      ['https://example.com/stream.m3u8', 'HLS playlist']
+      ['https://example.com/stream.m3u8', 'HLS stream']
     ]
 
     for (const [url, description] of videoTests) {
@@ -140,6 +140,20 @@ describe('detectMediaType', () => {
     for (const [url, description] of audioTests) {
       it(`detects ${description}: ${url}`, () => {
         assert.strictEqual(detectMediaType(url), 'audio')
+      })
+    }
+  })
+
+  describe('playlist detection', () => {
+    const playlistTests = [
+      ['https://example.com/playlist.m3u', 'M3U playlist'],
+      ['https://example.com/music.M3U', 'M3U uppercase'],
+      ['https://example.com/radio.m3u?token=abc', 'M3U with query params']
+    ]
+
+    for (const [url, description] of playlistTests) {
+      it(`detects ${description}: ${url}`, () => {
+        assert.strictEqual(detectMediaType(url), 'playlist')
       })
     }
   })
@@ -364,6 +378,18 @@ describe('type-specific helpers', () => {
       assert.strictEqual(isAudio('https://youtube.com/watch?v=dQw4w9WgXcQ'), false)
     })
   })
+
+  describe('isPlaylist', () => {
+    it('returns true for m3u playlists', () => {
+      assert.strictEqual(isPlaylist('https://x.com/music.m3u'), true)
+      assert.strictEqual(isPlaylist('https://x.com/radio.M3U'), true)
+    })
+
+    it('returns false for non-playlists', () => {
+      assert.strictEqual(isPlaylist('https://x.com/a.mp3'), false)
+      assert.strictEqual(isPlaylist('https://x.com/a.m3u8'), false) // m3u8 is video/HLS
+    })
+  })
 })
 
 describe('EXTENSIONS constant', () => {
@@ -384,5 +410,10 @@ describe('EXTENSIONS constant', () => {
     assert.ok(Array.isArray(EXTENSIONS.audio))
     assert.ok(EXTENSIONS.audio.includes('mp3'))
     assert.ok(EXTENSIONS.audio.includes('flac'))
+  })
+
+  it('exports playlist extensions', () => {
+    assert.ok(Array.isArray(EXTENSIONS.playlist))
+    assert.ok(EXTENSIONS.playlist.includes('m3u'))
   })
 })
