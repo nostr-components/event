@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nostr-components/event/gh-pages/assets/nostr-logo.svg" alt="Nostr Logo" width="120" height="120" onerror="this.style.display='none'">
+  <img src="https://raw.githubusercontent.com/mbarulli/nostr-logo/main/SVG/nostr-icon-purple-on-white.svg" alt="Nostr Logo" width="120" height="120">
 </p>
 
 <h1 align="center">nc-event</h1>
