@@ -89,7 +89,24 @@ import Event from 'nc-event'
 render(html`<${Event} event=${{ content: "Hello!", kind: 1 }} />`, document.body)
 ```
 
-### Option 3: Media Detection Only
+### Option 3: Parse M3U Playlists
+
+```javascript
+import { parseM3U, fetchM3U } from 'nc-event/lib/m3u-parser.js'
+
+// Parse M3U content
+const tracks = parseM3U(`#EXTM3U
+#EXTINF:180,Artist - Song Title
+https://example.com/song.mp3`)
+// [{ url: '...', title: 'Song Title', artist: 'Artist', duration: 180, type: 'audio' }]
+
+// Or fetch and parse from URL
+const playlist = await fetchM3U('https://example.com/playlist.m3u')
+```
+
+See the [Playlist Showcase](https://nostr-components.github.io/event/examples/playlist.html) for a live demo.
+
+### Option 4: Media Detection Only
 
 The media detection module works independently — use it in any project:
 
@@ -125,6 +142,7 @@ Try these in your browser:
 | [**Video**](https://nostr-components.github.io/event/examples/video.html) | Native video player |
 | [**YouTube**](https://nostr-components.github.io/event/examples/youtube.html) | Embedded YouTube |
 | [**Kind 1 Event**](https://nostr-components.github.io/event/examples/kind1.html) | Full event with metadata |
+| [**M3U Playlist**](https://nostr-components.github.io/event/examples/playlist.html) | Parsed playlist showcase |
 
 ---
 
@@ -247,9 +265,11 @@ nc-event/
 ├── lib/
 │   ├── nc-event.js   # <nc-event> custom element (use this!)
 │   ├── index.js      # Event Preact component
-│   └── media.js      # Media detection module (standalone)
+│   ├── media.js      # Media detection module
+│   └── m3u-parser.js # M3U playlist parser
 ├── test/
-│   └── media.test.js # Unit tests
+│   ├── media.test.js     # Media detection tests
+│   └── m3u-parser.test.js # M3U parser tests
 ├── js/
 │   └── standalone.module.js  # Bundled Preact + htm
 └── examples/         # Live demos

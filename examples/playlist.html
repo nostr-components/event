@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M3U Playlist Showcase - nc-event</title>
+  <link rel="icon" href="data:,">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+      padding: 20px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { text-align: center; margin-bottom: 10px; font-size: 2rem; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    .subtitle a { color: #667eea; }
+
+    .playlist-info {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+    .playlist-url { color: #4ade80; word-break: break-all; }
+
+    .tracks {
+      display: grid;
+      gap: 15px;
+    }
+    .track {
+      display: flex;
+      gap: 15px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 15px;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .track:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateX(5px);
+    }
+    .track-thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #333;
+      flex-shrink: 0;
+    }
+    .track-info { flex: 1; min-width: 0; }
+    .track-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-artist { color: #888; font-size: 0.9rem; margin-bottom: 8px; }
+    .track-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .badge.video { background: #f97316; }
+    .badge.audio { background: #ec4899; }
+    .badge.image { background: #22c55e; }
+    .badge.unknown { background: #666; }
+    .badge.duration { background: rgba(255,255,255,0.2); }
+
+    .track-media {
+      margin-top: 10px;
+    }
+    .track-media video, .track-media audio {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .track-media img {
+      max-width: 200px;
+      border-radius: 8px;
+    }
+
+    .loading { text-align: center; padding: 40px; color: #888; }
+    .error { text-align: center; padding: 40px; color: #f87171; }
+
+    .raw-section {
+      margin-top: 30px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .raw-section summary {
+      cursor: pointer;
+      color: #888;
+      margin-bottom: 10px;
+    }
+    .raw-section pre {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.8rem;
+      color: #4ade80;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎵 M3U Playlist Showcase</h1>
+    <p class="subtitle">
+      Parsed with <a href="https://github.com/nostr-components/event">nc-event</a> •
+      <a href="https://github.com/nostr-protocol/nips/issues/1945">NIP Proposal</a>
+    </p>
+
+    <div class="playlist-info">
+      <span style="color:#888">Playlist:</span>
+      <span class="playlist-url" id="playlist-url">Loading...</span>
+    </div>
+
+    <div id="tracks-container">
+      <div class="loading">Loading playlist...</div>
+    </div>
+
+    <details class="raw-section">
+      <summary>View raw M3U content</summary>
+      <pre id="raw-content">Loading...</pre>
+    </details>
+  </div>
+
+  <script type="module">
+    import { parseM3U, fetchM3U } from '../lib/m3u-parser.js'
+
+    const PLAYLIST_URL = 'https://nostr-components.github.io/event/examples/sample.m3u'
+    // For local testing: './sample.m3u'
+
+    document.getElementById('playlist-url').textContent = PLAYLIST_URL
+
+    async function loadPlaylist() {
+      const container = document.getElementById('tracks-container')
+
+      try {
+        // Fetch raw content for display
+        const response = await fetch(PLAYLIST_URL)
+        const rawContent = await response.text()
+        document.getElementById('raw-content').textContent = rawContent
+
+        // Parse the playlist
+        const tracks = parseM3U(rawContent)
+
+        if (tracks.length === 0) {
+          container.innerHTML = '<div class="error">No tracks found in playlist</div>'
+          return
+        }
+
+        container.innerHTML = '<div class="tracks">' + tracks.map(track => `
+          <div class="track">
+            <img
+              class="track-thumb"
+              src="${track.thumbnail || getPlaceholder(track.type)}"
+              alt="${track.title}"
+              onerror="this.src='${getPlaceholder(track.type)}'"
+            >
+            <div class="track-info">
+              <div class="track-title">${escapeHtml(track.title)}</div>
+              ${track.artist ? `<div class="track-artist">${escapeHtml(track.artist)}</div>` : ''}
+              <div class="track-meta">
+                <span class="badge ${track.type}">${track.type}</span>
+                ${track.duration > 0 ? `<span class="badge duration">${formatDuration(track.duration)}</span>` : ''}
+              </div>
+              <div class="track-media">
+                ${renderMedia(track)}
+              </div>
+            </div>
+          </div>
+        `).join('') + '</div>'
+
+      } catch (err) {
+        container.innerHTML = `<div class="error">Failed to load playlist: ${err.message}</div>`
+        console.error(err)
+      }
+    }
+
+    function renderMedia(track) {
+      switch (track.type) {
+        case 'video':
+          return `<video controls preload="metadata" src="${track.url}" style="max-height:200px"></video>`
+        case 'audio':
+          return `<audio controls preload="metadata" src="${track.url}"></audio>`
+        case 'image':
+          return `<img src="${track.url}" alt="${track.title}" loading="lazy">`
+        default:
+          return `<a href="${track.url}" target="_blank" style="color:#667eea">${track.url}</a>`
+      }
+    }
+
+    function getPlaceholder(type) {
+      // Simple SVG data URIs for placeholders
+      const colors = { video: '#f97316', audio: '#ec4899', image: '#22c55e' }
+      const icons = { video: '🎬', audio: '♪', image: '🖼' }
+      const color = colors[type] || '#666'
+      const icon = icons[type] || '?'
+      return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect fill="${color}" width="80" height="80" rx="8"/><text x="40" y="50" text-anchor="middle" font-size="30">${icon}</text></svg>`)}`
+    }
+
+    function formatDuration(seconds) {
+      const mins = Math.floor(seconds / 60)
+      const secs = seconds % 60
+      return mins > 0 ? `${mins}:${String(secs).padStart(2, '0')}` : `${secs}s`
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+    }
+
+    loadPlaylist()
+  </script>
+</body>
+</html>
